@@ -19,7 +19,8 @@ from typing import Any, Dict, Optional
 
 
 DEFAULT_KEY_ENV = "TAX_EXEMPTION_API_KEY"
-DEFAULT_API_KEY = "fW2eKh3wsBqMtOHQ6jyYn8xpiPZvaVXb"
+DEFAULT_BASE_URL = "https://oms.fridayparts.com"
+DEFAULT_API_KEY = ""
 TEST_CDN_PREFIX = "https://media.test.jeeda.net/"
 TEST_S3_PREFIX = "https://jeeda-media.s3.us-west-2.amazonaws.com/"
 
@@ -233,13 +234,13 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
 
     pending = sub.add_parser("pending", help="Fetch pending exemption applications")
-    pending.add_argument("--base-url", required=True)
+    pending.add_argument("--base-url", default=DEFAULT_BASE_URL)
     pending.add_argument("--page", type=int)
     pending.add_argument("--size", type=int)
     pending.set_defaults(func=cmd_pending)
 
     audit = sub.add_parser("audit", help="Write approved or rejected audit result")
-    audit.add_argument("--base-url", required=True)
+    audit.add_argument("--base-url", default=DEFAULT_BASE_URL)
     audit.add_argument("--id", required=True)
     audit.add_argument("--status", choices=["approved", "rejected"], required=True)
     audit.add_argument("--expired-at")

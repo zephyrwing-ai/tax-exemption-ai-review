@@ -23,15 +23,15 @@ Review pending tax exemption applications quickly and conservatively. Use only t
 ## Credentials
 
 - Treat the backend API key as the `X-API-Key` header for the Friday external tax exemption APIs.
-- The helper script includes the Friday test backend key as its default key for this local skill.
-- Runtime overrides still take precedence: pass `--api-key` or set `TAX_EXEMPTION_API_KEY` when a different key is required.
+- The helper script uses the Friday production backend by default: `https://oms.fridayparts.com`.
+- Provide the backend API key at runtime with `--api-key` or `TAX_EXEMPTION_API_KEY`.
 - Do not store AI/OCR provider keys in this skill or in generated review artifacts.
 - AI/OCR provider keys are separate from the backend `X-API-Key`. Do not put AI service credentials in `references/api.md`.
 
 ## Fast Workflow
 
 1. Fetch pending applications.
-   - Use the test backend by default: `https://jd.test.jeeda.net`.
+   - Use the production backend by default: `https://oms.fridayparts.com`.
    - Fetch pending applications with `GET /api/external/tax/exemption/pending`.
    - The API supports `page` and `size`; keep fetching pages/batches until the pending count is exhausted or the user-specified scope is complete.
    - Process only items with `status=pending`.
@@ -103,7 +103,7 @@ Examples:
 
 ```bash
 python3 ~/.codex/skills/tax-exemption-ai-review/scripts/tax_exemption_review.py \
-  pending --base-url https://jd.test.jeeda.net --page 1 --size 20
+  pending --page 1 --size 20
 
 python3 ~/.codex/skills/tax-exemption-ai-review/scripts/tax_exemption_review.py \
   download --url "<cert_url from pending response>" --out "/tmp/tax-exemption-<exemption_id>"
@@ -115,11 +115,11 @@ python3 ~/.codex/skills/tax-exemption-ai-review/scripts/tax_exemption_review.py 
   expiry --explicit-expiration "2026-12-31" --submitted-at "2026-06-10 12:00:00"
 
 python3 ~/.codex/skills/tax-exemption-ai-review/scripts/tax_exemption_review.py \
-  audit --base-url https://jd.test.jeeda.net --id 123 \
+  audit --id 123 \
   --status approved --expired-at "2026-12-31 23:59:59" --dry-run
 
 python3 ~/.codex/skills/tax-exemption-ai-review/scripts/tax_exemption_review.py \
-  audit --base-url https://jd.test.jeeda.net --id 123 \
+  audit --id 123 \
   --status rejected --refuse-reason "the document provided is not a valid tax exemption certificate." \
   --dry-run
 ```

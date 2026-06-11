@@ -8,14 +8,18 @@ import tax_exemption_review as review
 
 
 class ApiKeyTests(unittest.TestCase):
-    def test_load_api_key_uses_embedded_test_key_when_no_runtime_key_is_set(self):
+    def test_load_api_key_requires_runtime_key(self):
         args = argparse.Namespace(api_key=None, api_key_env="MISSING_TEST_KEY")
 
         with mock.patch.dict(os.environ, {}, clear=True):
-            self.assertEqual(
-                review.load_api_key(args),
-                "fW2eKh3wsBqMtOHQ6jyYn8xpiPZvaVXb",
-            )
+            with self.assertRaises(SystemExit):
+                review.load_api_key(args)
+
+    def test_load_api_key_uses_runtime_env_key(self):
+        args = argparse.Namespace(api_key=None, api_key_env="TAX_EXEMPTION_API_KEY")
+
+        with mock.patch.dict(os.environ, {"TAX_EXEMPTION_API_KEY": "prod-key"}, clear=True):
+            self.assertEqual(review.load_api_key(args), "prod-key")
 
 
 class AuditPayloadTests(unittest.TestCase):
@@ -72,7 +76,7 @@ class AuditPayloadTests(unittest.TestCase):
         args = argparse.Namespace(
             api_key=None,
             api_key_env="MISSING_TEST_KEY",
-            base_url="https://jd.test.jeeda.net",
+            base_url=review.DEFAULT_BASE_URL,
             id="123",
             status="rejected",
             expired_at="2026-06-11 09:08:07",
@@ -86,7 +90,7 @@ class AuditPayloadTests(unittest.TestCase):
 
         request_json.assert_not_called()
         printed = print_mock.call_args.args[0]
-        self.assertIn('"url": "https://jd.test.jeeda.net/api/external/tax/exemption/123/audit"', printed)
+        self.assertIn('"url": "https://oms.fridayparts.com/api/external/tax/exemption/123/audit"', printed)
         self.assertIn('"status": "rejected"', printed)
 
 

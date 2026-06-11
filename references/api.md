@@ -1,6 +1,6 @@
 # Friday Tax Exemption External API
 
-This reference documents backend APIs used by the skill. The local helper script includes the Friday test backend key by default. Provide credentials at runtime through `--api-key` or `TAX_EXEMPTION_API_KEY` when a different key is required.
+This reference documents backend APIs used by the skill. The local helper script uses the Friday production backend by default. Provide credentials at runtime through `--api-key` or `TAX_EXEMPTION_API_KEY`.
 
 ## Environments
 
@@ -16,13 +16,13 @@ Pass the backend API key in the request header:
 X-API-Key: <runtime key>
 ```
 
-The embedded integration-test key is for this backend header. It is not an OCR or AI model API key.
+The backend key is only for this backend header. It is not an OCR or AI model API key.
 
 ## Fetch Pending Applications
 
 ```http
 GET /api/external/tax/exemption/pending
-Use the test environment by default: `https://jd.test.jeeda.net`.
+Use the production environment by default: `https://oms.fridayparts.com`.
 X-API-Key: <runtime key>
 ```
 
