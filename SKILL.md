@@ -63,6 +63,7 @@ Review pending tax exemption applications quickly and conservatively. Use only t
 
 6. Write back results.
    - For approved cases, call `PUT /api/external/tax/exemption/{id}/audit` with `status=approved` and `expired_at`.
+   - For approved cases, `expired_at` is the tax exemption certificate's effective cutoff, not the audit time. Compute it from the expiration rules as a US Eastern business date and return it as `YYYY-MM-DD 23:59:59`.
    - For rejected cases, call the same audit API with `status=rejected`, `expired_at`, and `refuse_reason`.
    - For rejected cases, set `expired_at` to the current local datetime in `YYYY-MM-DD HH:mm:ss` format. This field is operationally required by the backend validator even though business meaning comes from the rejected status and refusal reason.
    - Never use dummy epoch values such as `1970-01-01 00:00:00`.
@@ -124,6 +125,8 @@ python3 ~/.codex/skills/tax-exemption-ai-review/scripts/tax_exemption_review.py 
   --dry-run
 ```
 
+The `expiry` helper returns the certificate cutoff date in US Eastern business time.
+For example, `2026-06-16` returns `2026-06-16 23:59:59`.
 
 ## Run summary
 

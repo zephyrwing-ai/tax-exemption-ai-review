@@ -132,5 +132,27 @@ class DownloadTests(unittest.TestCase):
         self.assertEqual(write_bytes.call_args.args[0], b"image")
 
 
+class ExpiryTests(unittest.TestCase):
+    def test_parse_date_uses_eastern_business_timezone(self):
+        parsed = review.parse_date("2026-06-16")
+
+        self.assertEqual(parsed.tzinfo.key, "America/New_York")
+        self.assertEqual(parsed.strftime("%Y-%m-%d %H:%M:%S"), "2026-06-16 23:59:59")
+
+    def test_expiry_outputs_eastern_business_end_of_day_string(self):
+        args = argparse.Namespace(
+            explicit_expiration="2026-06-16",
+            issue_date=None,
+            submitted_at=None,
+        )
+
+        with mock.patch("tax_exemption_review.print") as print_mock:
+            review.cmd_expiry(args)
+
+        printed = print_mock.call_args.args[0]
+        self.assertIn('"expired_at": "2026-06-16 23:59:59"', printed)
+        self.assertIn('"source": "explicit_expiration"', printed)
+
+
 if __name__ == "__main__":
     unittest.main()

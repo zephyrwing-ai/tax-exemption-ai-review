@@ -16,6 +16,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 from typing import Any, Dict, Optional
+from zoneinfo import ZoneInfo
 
 
 DEFAULT_KEY_ENV = "TAX_EXEMPTION_API_KEY"
@@ -23,6 +24,8 @@ DEFAULT_BASE_URL = "https://oms.fridayparts.com"
 DEFAULT_API_KEY = ""
 TEST_CDN_PREFIX = "https://media.test.jeeda.net/"
 TEST_S3_PREFIX = "https://jeeda-media.s3.us-west-2.amazonaws.com/"
+BUSINESS_TIMEZONE = "America/New_York"
+BUSINESS_TZ = ZoneInfo(BUSINESS_TIMEZONE)
 
 
 def load_api_key(args: argparse.Namespace) -> str:
@@ -154,7 +157,7 @@ def parse_date(value: str) -> dt.datetime:
             parsed = dt.datetime.strptime(value, fmt)
             if "%H" not in fmt:
                 parsed = parsed.replace(hour=23, minute=59, second=59)
-            return parsed
+            return parsed.replace(tzinfo=BUSINESS_TZ)
         except ValueError:
             pass
     raise SystemExit(f"Unsupported date format: {value}")

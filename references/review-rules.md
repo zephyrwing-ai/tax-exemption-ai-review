@@ -41,7 +41,7 @@ Return `status=rejected` for everything else and write the result through the au
 
 ## Expiration Rules
 
-Return `expired_at` as `YYYY-MM-DD 23:59:59` unless the certificate provides a more precise end time.
+Return `expired_at` as `YYYY-MM-DD 23:59:59` in US Eastern business time unless the certificate provides a more precise end time. This value is the certificate effective cutoff date, not the audit time.
 
 1. Explicit expiration date exists:
    - Use the certificate expiration date.

@@ -1,3 +1,3 @@
 display_name: Tax Exemption AI Review
 short_description: Review tax exemption certificates safely.
-default_prompt: Review pending tax exemption applications, compare certificate details against submitted customer data, write approved or rejected through the audit API, use standard refusal reasons, and summarize rejected cases for human follow-up.
+default_prompt: Review pending tax exemption applications, compare certificate details against submitted customer data, compute approved expired_at as the certificate cutoff date in US Eastern business time, write approved or rejected through the audit API, use standard refusal reasons, and summarize rejected cases for human follow-up.

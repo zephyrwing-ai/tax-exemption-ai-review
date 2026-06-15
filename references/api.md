@@ -119,6 +119,9 @@ Rules:
 
 - `status` is always required and must be `approved` or `rejected`.
 - `expired_at` is required when `status=approved`.
+- For `status=approved`, `expired_at` is the certificate effective cutoff date,
+  not the audit time. Generate it from the certificate/submission dates as a US
+  Eastern business cutoff and send it as `YYYY-MM-DD 23:59:59`.
 - `refuse_reason` is required when `status=rejected`.
 - For `status=rejected`, send `expired_at` as the current local datetime in
   `YYYY-MM-DD HH:mm:ss` format to satisfy the backend validator.
